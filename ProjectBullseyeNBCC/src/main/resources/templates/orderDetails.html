@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Order Details Page</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+    rel="stylesheet" />
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header>
+        <div class="navigation">
+            <div class="img">
+                <img src="img/logo2.png">
+            </div>
+            <div class="navigation-item current">
+                <a th:href="@{/showOrders}" class="navLinks">Orders</a>
+            </div>
+            <div class="navigation-item">
+                <a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+            </div>
+            <div class="navigation-item">
+                <a th:href="@{/showReports}" class="navLinks">Reports</a>
+            </div>
+            <div class="navigation-item">
+                <a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+            </div>
+            <div class="navigation-item navRight">
+                <a th:href="@{/showStores}" class="navLinks">Stores</a>
+            </div>
+            <div class="navigation-item dividorL">
+                <span style="color: white;">|</span>
+            </div>
+            <div class="navigation-item userIcon">
+                <a th:href="@{/showUsers}" class="">
+                <i class="fa fa-user fa-2x" aria-hidden="true" title="User Page" style="color: white;">
+                </i>
+                </a>
+            </div>
+            <div class="navigation-item dividor">
+                <span style="color: white;">|</span>
+            </div>
+            <div class="navigation-item logoutIcon">
+                <i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+                    style="color: white;"></i>
+            </div>
+        </div>
+    </header>
+    <div class="main">
+        <div class="content left">
+            <div class="userInfo">
+                <i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+                <h2>Hello, ~username~</h2>
+            </div>
+        </div>
+        <div class="content right">
+            <div class="containerDiv">
+                <a th:href="@{/showOrders}" class="styledLink"><i
+                    class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp;Order List</a>
+            </div>
+            <div class="display-list">
+                <div class="list-title report-info">
+                    <h2>
+                        Order Details for Order # <span th:text="${orderToDisplay.id}"></span>
+                    </h2>
+                    <h2>
+                        Date: <span th:text="${orderToDisplay.date}"></span>
+                    </h2>
+                    <!-- <h2>Employee # <span th:text="${orderToDisplay.employee.id}"></span></h2> -->
+                </div>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="oDetail : ${orderToDisplay.ordDetails}">
+                                <td th:text="${oDetail.product.id}"></td>
+                                <td th:text="${oDetail.product.name}"></td>
+                                <td th:text="${oDetail.quantity}"></td>
+                                <td
+                                    th:text="${totalList.get(orderToDisplay.ordDetails.indexOf(oDetail))}">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="order-sumary">
+                    <div class="item">
+                        <label>SubTotal:</label> <span th:text="${orderSubTotal}"></span>
+                    </div>
+                    <div class="item">
+                        <label>Taxes:</label> <span th:text="${orderTaxes}"></span>
+                    </div>
+                    <div class="item">
+                        <label>Total:</label> <span th:text="${orderTotal}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="place-order">
+                <a
+                    th:href="@{/reportDetails/{rId}(rId=${orderToDisplay.getOrderReport().id})}"
+                    class="btn-primary yellow">Go to Order's Report</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

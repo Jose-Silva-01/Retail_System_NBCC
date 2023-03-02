@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorator="layout/root_layout" lang="en">
+
+<head>
+<meta charset="ISO-8859-1">
+<title>Inventory Page</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="img/logo2.png">
+			</div>
+			<div sec:authorize="hasRole('ADMIN')" class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item current">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div sec:authorize="hasRole('ADMIN')" class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div sec:authorize="hasRole('ADMIN')" class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+				<a th:href="@{/showUsers}" class=""> <i class="fa fa-user fa-2x"
+					aria-hidden="true" title="User Page" style="color: white;"> </i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class="">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+		<div class="content left">
+
+			<div class="userInfo">
+				<i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+				<h2>
+					Hello,
+					<span sec:authentication="name"></span>
+				</h2>
+			</div>
+
+			<form th:action="@{/filterInventory}" method="POST"
+				class="search-form">
+				<div class="orderBy row">
+					<div class="orderBy-title">Order by:</div>
+
+					<div class="item">
+						<div class="radio"
+							th:if="${orderBySelected == null || orderBySelected == 'id'}">
+							<input id="productId" name="orderBy" type="radio" value="id"
+								checked> <label for="productId" class="radio-label">Inventory
+								ID</label>
+						</div>
+						<div class="radio"
+							th:unless="${orderBySelected == null || orderBySelected == 'id'}">
+							<input id="productId" name="orderBy" type="radio" value="id">
+							<label for="productId" class="radio-label">Inventory ID</label>
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="radio" th:if="${orderBySelected == 'quantity'}">
+							<input id="quantity" name="orderBy" type="radio" value="quantity"
+								checked> <label for="quantity" class="radio-label">Quantity</label>
+						</div>
+						<div class="radio" th:unless="${orderBySelected == 'quantity'}">
+							<input id="quantity" name="orderBy" type="radio" value="quantity">
+							<label for="quantity" class="radio-label">Quantity</label>
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="radio" th:if="${orderBySelected == 'name'}">
+							<input id="location" name="orderBy" type="radio" value="name"
+								checked> <label for="location" class="radio-label">Product
+								Name</label>
+						</div>
+						<div class="radio" th:unless="${orderBySelected == 'name'}">
+							<input id="location" name="orderBy" type="radio" value="name">
+							<label for="location" class="radio-label">Product Name</label>
+						</div>
+					</div>
+					<div class="">
+						<input type="submit" value="Order" class="button-31 addElement">
+					</div>
+				</div>
+			</form>
+
+			<div sec:authorize="hasRole('ADMIN')" class="otherLinks">
+				<div>
+					<a th:href="@{/addNewInventory}" class="addElement button-31">Add
+						Product to Inventory</a>
+				</div>
+			</div>
+
+			<div sec:authorize="hasRole('ADMIN')" class="otherLinks">
+				Go To ...
+				<div>
+					<a th:href="@{/showProducts}" class="button-31">Products List</a>
+				</div>
+				<div>
+					<a th:href="@{/showSuppliers}" class="button-31">Suppliers List</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="content right">
+			<div th:if="${inventoryList.size() == 0}">
+				<h2 class="center">No Inventory Products Found</h2>
+			</div>
+
+			<div class="right-content-header">
+				<div class="search-container">
+					<form th:action="@{/showInventory}" method="GET"
+						class="search-form">
+						<input type="text" name="pName" th:value="${pName}"
+							placeholder="Search..."> <input type="submit"
+							value="Search">
+					</form>
+				</div>
+			</div>
+
+			<div class="display-list" th:unless="${inventoryList.size() == 0}">
+				<div class="grid-container">
+					<div class="grid-item item1">
+						<div class="title">
+							Inventory For Store #<span th:text="${currentStore.getId() + ', ' + currentStore.getCity()}"></span>
+						</div>
+					</div>
+					<div class="grid-item item2">
+						<a sec:authorize="hasRole('ADMIN')"
+							th:href="@{/createInventoryReport}" class="elementDetails">Inventory
+							Report</a>
+					</div>
+					<div class="grid-item item3">
+						<a sec:authorize="hasRole('ADMIN')"
+							th:href="@{/createAutomaticOrder}" class="elementDetails">Automatic
+							Order</a>
+					</div>
+				</div>
+
+				<div class="table-container">
+					<table class="styled-table">
+						<thead>
+							<tr>
+								<th>Inventory ID</th>
+								<th>Product Name</th>
+								<th>Quantity</th>
+								<th>Location</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="inventoryProduct : ${inventoryList}">
+								<td th:text="${inventoryProduct.id}"></td>
+								<td th:text="${inventoryProduct.product.getName()}"></td>
+								<td
+									th:if="${inventoryProduct.quantity <= inventoryProduct.product.getReorderLevel()}"
+									th:text="${inventoryProduct.quantity}"
+									style="color: red; font-weight: bold"></td>
+								<td
+									th:if="${inventoryProduct.quantity > inventoryProduct.product.getReorderLevel()}"
+									th:text="${inventoryProduct.quantity}"
+									style="color: blue; font-weight: bold"></td>
+								<td th:text="${inventoryProduct.store.getCity()}"></td>
+								<td><a
+									sec:authorize="hasRole('ADMIN')"
+									th:href="@{/edit-inventory/{invId} (invId=${inventoryProduct.id})}"
+									class="elementDetails">Modify</a>
+									<a
+									sec:authorize="hasRole('EMP')" class="elementDetails">No Action</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="pagination">
+
+						<a href="#">&laquo;</a> <a href="#" class="active">1</a> <a
+							href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">5</a>
+						<a href="#">6</a> <a href="#">&raquo;</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

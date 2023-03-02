@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorator="layout/root_layout"
+      lang="en">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Order Page</title>
+	<link rel="stylesheet" href="../css/styles.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+		rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body sec:authorize="hasRole('ADMIN')">
+
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="img/logo2.png">
+			</div>
+			<div class="navigation-item current">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item ">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+				<a th:href="@{/showUsers}" class="">
+				<i class="fa fa-user fa-2x" aria-hidden="true" title="User Page" style="color: white;">
+				</i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class="">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+
+	</header>
+
+
+    <div class="main">
+        <div class="content left">
+            <div class="userInfo">
+                <i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+                <h2>Hello, <span sec:authentication="name"></span></h2>
+            </div>
+
+			<div class="orderBy">
+				<form th:action="@{/filterOrders}" method="POST">
+					<div class="orderBy-title">Order by:</div>
+
+					<div class="item">
+						<div class="radio">
+							<div th:if="${orderBySelected == null }">
+								<input id="orderId" name="orderBy" type="radio" checked value="idAsc"> <label
+									for="orderId" class="radio-label">Order
+									Id Asc</label>
+							</div>
+							<div th:if="${orderBySelected != null }">
+								<div th:if="${orderBySelected == 'idAsc'}">
+									<input id="orderId" name="orderBy" type="radio" checked value="idAsc"> <label
+										for="orderId" class="radio-label">Order Id Asc</label>
+								</div>
+								<div th:unless="${orderBySelected == 'idAsc'}">
+									<input id="orderId" name="orderBy" type="radio" value="idAsc">
+									<label for="orderId" class="radio-label">Order Id Asc</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="radio">
+							<div th:if="${orderBySelected == null }">
+								<input id="orderId" name="orderBy" type="radio" value="idDesc">
+								<label for="id" class="radio-label">Order Id Desc</label>
+							</div>
+							<div th:if="${orderBySelected != null }">
+								<div th:if="${orderBySelected == 'idDesc'}">
+									<input id="orderId" name="orderBy" type="radio" checked value="idDesc"> <label
+										for="date" class="radio-label">Order
+										Id Desc</label>
+								</div>
+								<div th:unless="${orderBySelected == 'idDesc'}">
+									<input id="orderId" name="orderBy" type="radio" value="date">
+									<label for="orderId" class="radio-label">Order Id Desc</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<br> <input type="submit" class="btn-primary yellow" value="Apply">
+
+				</form>
+			</div>
+		</div>
+
+		<div class="content right">
+			<div class="search-container">
+				<form th:action="@{/searchOrders}" method="POST" class="search-form">
+					<input type="text" name="searchInput" placeholder="Search By ID..."> <input type="submit"
+						value="Search">
+				</form>
+			</div>
+
+
+			<h2>Order History</h2>
+
+				<div>
+					<a th:href="@{/createOrder}" class="button-31 addElement" style="width: 320px;">Create Order</a>
+				</div>
+				<div class="table-container">
+					<table class="styled-table">
+						<!-- Dynamically updated by the DB -->
+						<thead>
+
+							<tr>
+								<th>Order ID</th>
+
+								<th>Date</th>
+								<th>Order Total</th>
+								<th>Details</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="order: ${orderList}">
+
+								<td th:text="${order.id}"></td>
+								<td th:text="${order.date}"></td>
+								<td th:text="${orderTotalList.get(orderList.indexOf(order))}"></td>
+								<td><a th:href="@{/toOrderDetails/{oId} (oId=${order.id})}"
+										class="elementDetails">Details</a></td>
+							</tr>
+						</tbody>
+					</table>
+
+        <div class="content right">
+            <div class="search-container">
+                <form th:action="@{/showOrders}" method="GET" class="search-form">
+                <input type="text" name="oId" th:value="${oId}" placeholder="Search...">
+                <input type="submit" value="Search">
+                </form>
+            </div> 
+
+
+            <fieldset>
+                <legend>Order History</legend>                
+            	<div>
+                	<a sec:authorize="hasRole('ADMIN')" th:href="@{/createOrder}" class="button-31 addElement">Create Order</a>
+                </div>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <!-- Dynamically updated by the DB -->
+                        <thead>
+                        
+                            <tr>
+                                <th>Order ID</th>
+                                
+                                <th>Date</th>
+                                <th>Details</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="order: ${orderList}">
+                            
+                                    <td th:text="${order.id}"></td>
+                                    <td th:text="${order.date}"></td>
+                                    <td><a th:href="@{/toOrderDetails/{oId} (oId=${order.id})}" class="elementDetails">Details</a></td>
+                                    <td><a sec:authorize="hasRole('ADMIN')" th:href="@{/edit-order/{oId} (oId=${order.id})}" class="elementDetails">Modify</a></td>
+                               </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>          
+        </div>
+    </div>
+</body>
+
+</html>

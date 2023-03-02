@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Adding New Product</title>
+<link rel="stylesheet" href="../css/addElementCss.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="../img/logo2.png">
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon current">
+								<a th:href="@{/showUsers}" class="">
+				<i class="fa fa-user fa-2x" aria-hidden="true" title="User Page" style="color: white;">
+				</i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class="">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+
+		<div class="containerDiv">
+			<a th:href="@{/showUsers}" class="styledLink"><i
+				class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp;Employee List</a>
+		</div>
+		<h2 class="title">
+			Info for Employee: <span
+				th:text="${employeeToView.firstName + ' ' + employeeToView.lastName}"></span>
+		</h2>
+
+
+		<div class="container">
+				<div class="row">
+					<div class="col-half">
+						<h4>First Name</h4>
+						<div class="attributeField" th:text="${employeeToView.firstName}"></div>
+					</div>
+					<div class="col-half">
+								<div class="col-half-right">
+						<a th:href="@{/edit-employee/{eId} (eId = ${employeeToView.id})}"><i
+							class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
+					</div>
+						<h4>Last Name</h4>
+						<div class="attributeField" th:text="${employeeToView.lastName}"></div>
+					</div>
+				</div>
+			<div class="row">
+				<div class="col-half">
+					<h4>Department</h4>
+					<div class="attributeField" th:text="${employeeToView.dept.getName()}"></div>
+				</div>
+				<div class="col-half">
+					<h4>Job Role</h4>
+					<div class="attributeField" th:text="${employeeToView.jobRole}"></div>
+				</div>
+			</div>
+				<div class="row">
+					<h4>Extra Details</h4>
+					<div class="col-half">
+						<label>Username</label>
+						<div class="attributeField" th:text="${employeeToView.username}"></div>
+					</div>
+					<div class="col-half">
+						<label>Password</label>
+						<div class="attributeField">Not Available</div>
+					</div>
+
+					<div class="col-half">
+						<label>Phone</label>
+
+						<div class="attributeField" th:text="${employeeToView.phone}"></div>
+
+					</div>
+					<div class="col-half">
+						<label>Email</label>
+
+						<div class="attributeField" th:text="${employeeToView.email}"></div>
+
+					</div>
+
+					<div class="">
+						<label>Address</label>
+						<div class="attributeField" th:text="${employeeToView.address}"></div>
+		</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

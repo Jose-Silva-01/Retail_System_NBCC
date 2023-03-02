@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+
+    <title>Create Order</title>
+    <link rel="stylesheet" href="css/styles.css">
+       <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="../img/logo2.png">
+			</div>
+			<div class="navigation-item current">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+
+			<div class="navigation-item">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+				<a th:href="@{/showUsers}" class="">
+				<i class="fa fa-user fa-2x" aria-hidden="true" title="User Page" style="color: white;">
+				</i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out" style="color: white;"></i>
+			</div>
+		</div>
+	</header>
+
+    <div class="main">
+        <div class="content left">
+            <div class="userInfo">
+                <i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+                <h2>Hello, <span sec:authentication="name"></span></h2>
+            </div>
+
+            <div class="add-product-form">
+                <fieldset>
+                    <legend>Add Product</legend>
+                    <form method="POST" th:action="@{/addOrderDetailsToOrder}" th:object="${oDetailToAdd}">
+                        <div class="add-product-details">
+                            <div class="item">
+                                <!-- I need a hiden for the orderId 
+                            	<input type="number" th:text="${orderToCreate.id}" th:field="*{order}" hidden>-->
+                                <label for="productName" class="label">Name</label>
+                                <br>
+                                <select name="productName" th:field="*{product}">
+                                    <option value="0"> Select A Product </option>
+                                    <option th:each="p : ${productList}" th:value="${p.id}" th:text="${p.name}">
+                                    </option>
+                                </select>
+                                <br>
+                                <br>
+                            </div>
+
+                            <div class="item">
+                                <label for="date" class="radio-label">Quantity</label>
+                                <br>
+                                <select name="productQuantity" th:field="*{quantity}">
+                                    <option value=1>1</option>
+                                    <option value=2>2</option>
+                                    <option value=3>3</option>
+                                    <option value=4>4</option>
+                                    <option value=5>5</option>
+                                    <option value=6>6</option>
+                                    <option value=7>7</option>
+                                    <option value=8>8</option>
+                                    <option value=9>9</option>
+                                    <option value=10>10</option>
+                                </select>
+                                <br>
+                                <br>
+                            </div>
+
+                            <!--
+                            <div class="item">
+                                 Display product total depending on product and quantity 
+                                <label for="productTotal" class="radio-label">Total</label>
+                                <br>
+                                <input id="productTotal" name="orderBy" type="text" disabled>
+                            </div>
+                            -->
+
+                            <div class="item right-item">
+                                <input type="submit" value="Add Product" class="btn-primary yellow">
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="content right">
+            <fieldset>
+                <legend>Order Details</legend>
+
+                <div th:if="${orderToCreate.getOrdDetails() == null}">
+                    <h1 class="center">Add Product to Begin</h1>
+                </div>
+                <div th:unless="${orderToCreate.getOrdDetails() == null}">
+                    <div class="table-container">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="oDetail : ${oDetailsList}">
+                                    <td th:text="${oDetail.product.id}"></td>
+                                    <td th:text="${oDetail.product.name}"></td>
+                                    <td th:text="${oDetail.quantity}"></td>
+                                    <td th:text="${totalList.get(oDetailsList.indexOf(oDetail))}"></td>
+                                    <td><a th:href="@{/deleteOrderDetail/{pIndex}(pIndex=${oDetailsList.indexOf(oDetail)})}"
+                                            class="elementDetails">Remove</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="order-sumary">
+                        <div class="item">
+                            <label>SubTotal:</label> <span th:text="${orderSubTotal}"></span>
+                        </div>
+                        <div class="item">
+                            <label>Taxes:</label> <span th:text="${orderTaxes}"></span>
+                        </div>
+                        <div class="item">
+                            <label>Total:</label> <span th:text="${orderTotal}"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+            <div class="place-order">
+                <a th:href="@{cancelOrder}" class="btn-primary grey">Cancel Order</a>
+                <a th:href="@{/placeOrder}" class="btn-primary yellow">Place Order</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

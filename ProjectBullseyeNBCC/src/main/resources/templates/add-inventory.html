@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Adding New Product</title>
+<link rel="stylesheet" href="css/addElementCss.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="img/logo2.png">
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item current">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+								<a th:href="@{/showUsers}" class="">
+				<i class="fa fa-user fa-2x" aria-hidden="true" title="User Page" style="color: white;">
+				</i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class="">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+
+		<div class="containerDiv">
+			<a th:href="@{/showInventory}" class="styledLink"><i
+				class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp;Inventory
+				List</a>
+		</div>
+		<h2 class="title">Add New Product To Inventory</h2>
+
+		<div class="" th:if="${errorMessage != null}" style="color: red;">
+			<p th:text="${errorMessage}"></p>
+		</div>
+
+		<div class="container">
+			<form th:action="processAddInventoryProduct" method="POST"
+				th:object="${inventoryToAdd}">
+				<div class="col-half">
+					<h4>Product</h4>
+					<select name="product" th:field="*{product}">
+						<option th:each="product : ${productsList}"
+							th:value="${product.id}" th:text="${product.name}"></option>
+					</select>
+				</div>
+				<div class="col-half">
+					<h4>Quantity</h4>
+					<input type="number" th:field="*{quantity}" min="1">
+				</div>
+				<input type="submit" class="button-31"
+					value="Add New Product To Inventory">
+			</form>
+		</div>
+	</div>
+</body>
+</html>
+
+</body>
+</html>

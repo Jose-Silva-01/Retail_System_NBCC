@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>View Supplier</title>
+<link rel="stylesheet" href="../css/addElementCss.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="../img/logo2.png">
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item ">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight current">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+				<a th:href="@{/showUsers}" class="">
+				<i class="fa fa-user fa-2x" aria-hidden="true" title="User Page" style="color: white;">
+				</i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class="">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+
+		<div class="containerDiv">
+			<a th:href="@{/showStores}" class="styledLink"><i
+				class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp;Stores List</a>
+		</div>
+		<h2 class="title">
+			Update Info for <span th:text="${sToEdit.city}"></span> Store #<span
+				th:text="${sToEdit.id}"></span>
+		</h2>
+
+
+		<div class="container">
+			<form th:action="@{/updateStore}" method="POST"
+				th:object="${sToEdit}">
+				<input type="hidden" th:field="*{id}"><br> <input
+					type="hidden" th:field="*{name}"><br>
+				<div class="row">
+					<div class="col-half">
+						<h4>Location:</h4>
+						<input type="text" class="attributeField" th:field="*{location}"><br>
+					</div>
+					<div class="col-half">
+						<h4>City:</h4>
+						<input type="text" class="attributeField" th:field="*{city}"><br>
+					</div>
+				</div>
+				<div class="row">
+			<div class="col-half">
+				<h4>Phone Number:</h4>
+				<input type="text" class="attributeField" th:field="*{phone}"><br>
+			</div>
+			<div class="col-half">
+				<h4>Type:</h4>
+				<select name="isWarehouse" th:field="*{isWarehouse}">
+					<option value="false" >Store</option>
+					<option value="true" >Warehouse</option>
+				</select>
+			</div>
+		</div>
+		<input type="submit" class="button-31" value="Update Store">
+		</form>
+		</div>
+		</div>
+</body>
+</html>

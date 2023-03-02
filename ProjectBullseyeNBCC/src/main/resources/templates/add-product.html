@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Adding New Product</title>
+<link rel="stylesheet" href="css/addElementCss.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+		<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="img/logo2.png">
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item current">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+								<a th:href="@{/showUsers}" class="">
+				<i class="fa fa-user fa-2x" aria-hidden="true" title="User Page" style="color: white;">
+				</i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class="">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+
+				<div class="containerDiv">
+			<a th:href="@{/showProducts}" class="styledLink"><i class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp;Products List</a>
+		</div>
+		<h2 class="title">Add New Product</h2>
+
+
+		<div class="container">
+			<form th:action="processAddProduct" method="POST"
+				th:object="${productToAdd}">
+				<div class="col-half">
+					<div class="row">
+						<h4>Product Name</h4>
+						<input type="text" th:field="*{name}" placeholder="Name" required>
+
+						<h4>Product Description</h4>
+						<textarea th:field="*{description}" placeholder="Description" required></textarea>
+					</div>
+					<div class="row">
+						<div class="col-half">
+							<h4>Category</h4>
+							<select name="category" th:field="*{category}">
+								<option
+									th:each="category : ${T(ca.nbcc.retailapp.model.ProductCategory).values()}"
+									th:value="${category}" th:text="${category}"></option>
+							</select>
+						</div>
+						<div class="col-half">
+							<h4>Supplier</h4>
+							<select name="suplier" th:field="*{suplier}">
+								<option th:each="suplier : ${suppliersList}"
+									th:value="${suplier.id}" th:text="${suplier.name}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-half">
+					<div class="row">
+						<h4>Extra Details</h4>
+						<div class="">
+							<label>Reorder Level</label> <input type="text"
+								th:field="*{reorderLevel}" placeholder="Reorder Level" required/>
+						</div>
+
+						<label>Weight (Kg)</label>
+						<div class="">
+							<input type="text" th:field="*{weight}" placeholder="Weight (Kg)" required/>
+						</div>
+
+						<div class="col-half">
+							<label>Size (m³)</label>
+							<div class="">
+								<input type="text" th:field="*{size}" placeholder="Size (m³)" required/>
+							</div>
+						</div>
+						<div class="col-half">
+							<label>Case Size (m³)</label>
+							<div class="">
+								<input type="text" th:field="*{caseSize}"
+									placeholder="Case Size (m³)" required />
+							</div>
+						</div>
+
+						<div class="col-half">
+							<label>Price</label>
+							<div class="">
+								<input type="text" th:field="*{price}" placeholder="Price" required/>
+							</div>
+						</div>
+
+						<div class="col-half" style="margin-left: 0em; padding-right: 10px;">
+							<label>Color</label>
+							<div class="">
+								<input type="text" th:field="*{color}" placeholder="Color" required />
+
+							</div>
+						</div>
+					</div>
+					</div>
+					<input type="submit" class="button-31" value="Add Product">
+				
+			</form>
+		</div>
+	</div>
+</body>
+</html>

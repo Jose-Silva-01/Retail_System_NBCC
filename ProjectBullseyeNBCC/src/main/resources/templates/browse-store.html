@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorator="layout/root_layout"
+      lang="en">
+<head>
+<meta charset="ISO-8859-1">
+<title>View Supplier</title>
+<link rel="stylesheet" href="../css/addElementCss.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="../img/logo2.png">
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight current">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+				<a th:href="@{/showUsers}" class=""> <i class="fa fa-user fa-2x"
+					aria-hidden="true" title="User Page" style="color: white;"> </i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class="">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+
+		<div class="containerDiv">
+			<a th:href="@{/showStores}" class="styledLink"><i
+				class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp;Stores List</a>
+		</div>
+		<h2 class="title">
+			Info for <span th:text="${storeToView.city}"></span> Store #<span
+				th:text="${storeToView.id}"></span>
+		</h2>
+
+
+		<div class="container">
+			<div class="row">
+				<div class="col-half">
+					<h4>Location:</h4>
+					<div class="attributeField" th:text="${storeToView.location}"></div>
+				</div>
+				<div class="col-half">
+					<div sec:authorize="hasRole('ADMIN')" class="col-half-right icon">
+						<a th:href="@{/edit-store/{sId} (sId = ${storeToView.id})}"><i
+							class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
+					</div>
+					<div class="col=half">
+						<h4>City:</h4>
+						<div class="attributeField" th:text="${storeToView.city}"></div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-half">
+					<h4>Phone Number:</h4>
+					<div class="attributeField" th:text="${storeToView.phone}"></div>
+				</div>
+				<div class="col-half">
+					<h4>Type:</h4>
+					<div class="attributeField">
+						<span th:if="${storeToView.isWarehouse == true}">Warehouse</span>
+						<span th:unless="${storeToView.isWarehouse == true}">Store</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+</html>
+
+</body>
+</html>

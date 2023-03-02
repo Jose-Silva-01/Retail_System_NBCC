@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>View Product</title>
+<link rel="stylesheet" href="../css/addElementCss.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="../img/logo2.png">
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item current">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+				<a th:href="@{/showUsers}" class="">
+				<i class="fa fa-user fa-2x" aria-hidden="true" title="User Page" style="color: white;">
+				</i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class="">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+
+		<div class="containerDiv">
+			<a th:href="@{/showShipping}" class="styledLink"><i
+				class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp;Shipments
+				List</a>
+		</div>
+		<h2 class="title">
+			Info for Shipping #<span th:text="${shippingToView.id}"></span>
+		</h2>
+
+
+		<div class="container">
+			<div class="row">
+				<div class="col-half">
+					<h4>Leave Date</h4>
+					<div class="attributeField" th:text="${shippingToView.leaveDate}"></div>
+				</div>
+				<div class="col-half">
+					<div class="col-half-right icon">
+						<a th:href="@{/edit-shipping/{sId} (sId = ${shippingToView.id})}"><i
+							class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
+					</div>
+					<div class="">
+						<h4>Arrive Date</h4>
+						<div class="attributeField" th:text="${shippingToView.arriveDate}"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-half">
+						<h4>Status</h4>
+						<div class="attributeField" th:text="${shippingToView.status}"></div>
+					</div>
+					<div class="col-half">
+						<h4>Order Id</h4>
+						<div class="attributeField"
+							th:text="${shippingToView.order.getId()}"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div>
+						<h4>Products Being Shipped</h4>
+						<div>
+							<table class="styled-table">
+								<thead>
+									<tr>
+										<th>Product ID</th>
+										<th>Name</th>
+										<th>Category</th>
+										<th>Size</th>
+										<th>Case Size</th>
+										<th>Weight</th>
+										<th>Quantity</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr
+										th:each="ordDetails : ${shippingToView.order.getOrdDetails()}">
+										<td th:text="${ordDetails.product.getId()}"></td>
+										<td th:text="${ordDetails.product.getName()}"></td>
+										<td th:text="${ordDetails.product.getCategory()}"></td>
+										<td th:text="${ordDetails.product.getSize()}"></td>
+										<td th:text="${ordDetails.product.getCaseSize()}"></td>
+										<td th:text="${ordDetails.product.getWeight()}"></td>
+										<td th:text="${ordDetails.getQuantity()}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row" th:if="${shippingToView.status == closedStatus}">
+			<a th:href="@{/updateInvThroughShipping/{sId} (sId = ${shippingToView.id})}"
+				class="button-31">Update Inventory</a>
+		</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

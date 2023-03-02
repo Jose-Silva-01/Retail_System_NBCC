@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorator="layout/root_layout" lang="en">
+<head>
+<meta charset="ISO-8859-1">
+<title>Reports Page</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body sec:authorize="hasRole('ADMIN')">
+
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="img/logo2.png">
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item ">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item current">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+				<a th:href="@{/showUsers}" class=""> <i class="fa fa-user fa-2x"
+					aria-hidden="true" title="User Page" style="color: white;"> </i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class=""> <i
+					class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+		<div class="content left">
+
+			<div class="userInfo">
+				<i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+				<h2>
+					Hello, <span sec:authentication="name"></span>
+				</h2>
+			</div>
+
+			<div class="orderBy">
+				<form th:action="@{/filterReports}" method="POST">
+					<div class="orderBy-title">Order by:</div>
+
+					<div class="item">
+						<div class="radio">
+							<div th:if="${orderBySelected == null }">
+								<input id="reportId" name="orderBy" type="radio" checked
+									value="id"> <label for="reportId" class="radio-label">Report
+									ID</label>
+							</div>
+							<div th:if="${orderBySelected != null }">
+								<div th:if="${orderBySelected == 'id'}">
+									<input id="reportId" name="orderBy" type="radio" checked
+										value="id"> <label for="reportId" class="radio-label">Report
+										ID</label>
+								</div>
+								<div th:unless="${orderBySelected == 'id'}">
+									<input id="reportId" name="orderBy" type="radio" value="id">
+									<label for="reportId" class="radio-label">Report ID</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="radio">
+							<div th:if="${orderBySelected == null }">
+								<input id="date" name="orderBy" type="radio" value="date">
+								<label for="date" class="radio-label">Date</label>
+							</div>
+							<div th:if="${orderBySelected != null }">
+								<div th:if="${orderBySelected == 'date'}">
+									<input id="date" name="orderBy" type="radio" checked
+										value="date"> <label for="date" class="radio-label">Date</label>
+								</div>
+								<div th:unless="${orderBySelected == 'date'}">
+									<input id="date" name="orderBy" type="radio" value="date">
+									<label for="date" class="radio-label">Date</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="radio">
+
+							<div th:if="${orderBySelected == null }">
+								<input id="employee" name="orderBy" type="radio"
+									value="employee"> <label for="employee"
+									class="radio-label">Employee</label>
+							</div>
+							<div th:if="${orderBySelected != null }">
+								<div th:if="${orderBySelected == 'employee'}">
+									<input id="employee" name="orderBy" type="radio" checked
+										value="employee"> <label for="employee"
+										class="radio-label">Employee</label>
+								</div>
+								<div th:unless="${orderBySelected == 'employee'}">
+									<input id="employee" name="orderBy" type="radio"
+										value="employee"> <label for="employee"
+										class="radio-label">Employee</label>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="item report-type">
+						<label>Report Type</label> <br> <select name="reportTypes">
+							<option value=0>All Types</option>
+							<option th:each="c : ${categoryList}" th:value="${c}"
+								th:text="${c}"></option>
+						</select>
+					</div>
+					<br> <br> <br> <input type="submit"
+						class="btn-primary yellow" value="Apply Filters">
+				</form>
+			</div>
+		</div>
+
+		<div class="content right">
+			<div th:if="${reportList.size() == 0 || reportList.equals(null)}">
+				<div th:if="${errorMessageSearch != null}">
+					<h2 class="center" th:text="${errorMessageSearch}"></h2>
+					<a th:href="@{/showReports}" class="elementDetails center">See
+						all Reports</a>
+				</div>
+				<div th:unless="${errorMessageSearch != null}">
+					<h2 class="center">No Reports yet</h2>
+					<h3 class="center">Generate a new report to see the report's
+						list</h3>
+				</div>
+			</div>
+
+			<div th:unless="${reportList.size() == 0 || reportList == null}">
+				<div class="right-content-header">
+					<div class="search-container">
+						<form class="search-form" method="POST"
+							th:action="@{/searchReports}">
+							<input type="text" placeholder="Search by Report ID..."
+								name="searchInput"> <input type="submit" value="Search">
+						</form>
+					</div>
+				</div>
+				<div class="display-list">
+					<div class="list-title">
+						<h2>
+							Report List &nbsp;<i class="fa fa-book" aria-hidden="true"></i>
+						</h2>
+					</div>
+					<div class="table-container">
+						<table class="styled-table">
+							<thead>
+								<tr>
+									<th>Report ID</th>
+									<th>Report Type</th>
+									<th>Date</th>
+									<th>Details</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="r : ${reportList}">
+									<td th:text="${r.id}"></td>
+									<td th:text="${r.repCategory}"></td>
+									<td th:text="${r.date}"></td>
+									<td><a th:href="@{reportDetails/{rId}(rId=${r.id})}"
+										class="elementDetails">Details</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorator="layout/root_layout" lang="en">
+
+<head>
+<meta charset="ISO-8859-1">
+<title>Users Page</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="img/logo2.png">
+			</div>
+			<div class="navigation-item" sec:authorize="hasRole('ADMIN')">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item" sec:authorize="hasRole('ADMIN')">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item" sec:authorize="hasRole('ADMIN')">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon current">
+				<i class="fa fa-user fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class=""> <i
+					class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+
+		<div class="content empCont">
+			<div class="title userTitle">Employee Page</div>
+			<fieldset>
+				<h2>My User - <span th:text="${currentEmployee.username}"></span></h2>
+				<div class="container">
+					<div class="row">
+						<div class="col-half">
+							<h4>First Name</h4>
+						<div class="attributeField" th:text="${currentEmployee.firstName}"></div>
+						</div>
+						<div class="col-half">
+							<h4>Last Name</h4>
+						<div class="attributeField" th:text="${currentEmployee.lastName}"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-half">
+							<h4>Job Role</h4>
+						<div class="attributeField" th:text="${currentEmployee.jobRole}"></div>
+						</div>
+						<div class="col-half">
+							<h4>Department</h4>
+						<div class="attributeField" th:text="${currentEmployee.dept.getName()}"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-half">
+							<h4>Phone</h4>
+						<div class="attributeField" th:text="${currentEmployee.phone}"></div>
+						</div>
+						<div class="col-half">
+							<h4>Email</h4>
+						<div class="attributeField" th:text="${currentEmployee.email}"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="">
+							<h4>Address</h4>
+						<div class="attributeField" th:text="${currentEmployee.address}"></div>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset sec:authorize="hasRole('ADMIN')">
+				<h2>Employee List</h2>
+				<div class="container">
+					<div class="search-container">
+						<form th:action="@{/showUsers}" method="GET" class="search-form">
+							<input type="text" name="lName" th:value="${lName}" placeholder="Search By Last Name..."> 
+							<input type="submit" value="Search">
+						</form>
+					</div>
+				</div>
+				<div class="create-order">
+					<a th:href="@{/addNewEmployee}"
+						class="addElement button-31 smallButton">Create New User</a>
+				</div>
+				<div class="table-container">
+					<table class="styled-table">
+						<!-- Dynamically updated by the DB -->
+						<thead>
+
+							<tr>
+								<th>Username</th>
+								<th>Name</th>
+								<th>Department</th>
+								<th>Job Role</th>
+								<th>Details</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="emp: ${employeeList}">
+								<td th:text="${emp.username}"></td>
+								<td th:text="${emp.lastName + ', ' + emp.firstName}"></td>
+								<td th:text="${emp.dept.getName()}"></td>
+								<td th:text="${emp.jobRole}"></td>
+								<td><a th:href="@{/browse-employee/{eId} (eId=${emp.id})}"
+									class="elementDetails">Details</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</fieldset>
+		</div>
+
+
+	</div>
+</body>
+</html>

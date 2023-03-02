@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="ISO-8859-1">
+<title>Stores Page</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="img/logo2.png">
+			</div>
+			<div sec:authorize="hasRole('ADMIN')" class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div sec:authorize="hasRole('ADMIN')" class="navigation-item">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div sec:authorize="hasRole('ADMIN')" class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight current">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+				<a th:href="@{/showUsers}" class=""> <i class="fa fa-user fa-2x"
+					aria-hidden="true" title="User Page" style="color: white;"> </i>
+				</a>
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class="">
+				<i class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main">
+		<div class="content left">
+
+			<div class="userInfo">
+				<i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+				<h2>
+					Hello,
+					<span sec:authentication="name"></span>
+				</h2>
+			</div>
+
+			<form th:action="@{/filterStores}" method="POST" class="search-form">
+				<div class="orderBy row">
+					<div class="orderBy-title">Order by:</div>
+
+					<div class="item">
+						<div class="radio"
+							th:if="${orderBySelected == null || orderBySelected == 'id'}">
+							<input id="productId" name="orderBy" type="radio" value="id"
+								checked> <label for="productId" class="radio-label">Store
+								ID</label>
+						</div>
+						<div class="radio"
+							th:unless="${orderBySelected == null || orderBySelected == 'id'}">
+							<input id="productId" name="orderBy" type="radio" value="id">
+							<label for="productId" class="radio-label">Product ID</label>
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="radio" th:if="${orderBySelected == 'city'}">
+							<input id="quantity" name="orderBy" type="radio" value="city" checked> <label
+								for="quantity" class="radio-label">City</label>
+						</div>
+						<div class="radio" th:unless="${orderBySelected == 'city'}">
+							<input id="quantity" name="orderBy" type="radio" value="city"> <label
+								for="quantity" class="radio-label">City</label>
+						</div>
+					</div>
+					<div class="">
+						<input type="submit" value="Order" class="button-31 addElement">
+					</div>
+				</div>
+			</form>
+			</div>
+
+			<div class="content right">
+				<div th:if="${storeList.size() == 0}">
+					<h2 class="center">No Stores Found</h2>
+				</div>
+				<div class="right-content-header">
+					<div class="search-container">
+						<form th:action="@{/showStores}" method="GET" class="search-form">
+							<input type="text" name="sName" th:value="${sName}"
+								placeholder="Search By City..."> <input type="submit"
+								value="Search">
+						</form>
+					</div>
+				</div>
+
+				<div class="display-list">
+					<div class="list-title">
+						<h2>Stores List</h2>
+					</div>
+
+					<div class="table-container">
+						<table class="styled-table">
+							<!-- Dinamically updated by the DB -->
+							<thead>
+								<tr>
+									<th>Store ID</th>
+									<th>City</th>
+									<th>Location</th>
+									<th>Type</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="store : ${storeList}">
+									<td th:text="${store.id}"></td>
+									<td th:text="${store.city}"></td>
+									<td th:text="${store.location}"></td>
+									<td><span th:if="${store.isWarehouse == true}">Warehouse</span>
+										<span th:unless="${store.isWarehouse == true}">Store</span></td>
+									<td><a th:href="@{/browse-store/{sId} (sId=${store.id})}"
+										class="elementDetails">Details</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+</body>
+</html>

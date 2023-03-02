@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorator="layout/root_layout" lang="en">
+<head>
+<meta charset="ISO-8859-1">
+<title>Report Details</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+	<header>
+		<div class="navigation">
+			<div class="img">
+				<img src="img/logo2.png">
+			</div>
+
+			<div class="navigation-item">
+				<a th:href="@{/showOrders}" class="navLinks">Orders</a>
+			</div>
+			<div class="navigation-item ">
+				<a th:href="@{/showInventory}" class="navLinks">Inventory</a>
+			</div>
+			<div class="navigation-item current">
+				<a th:href="@{/showReports}" class="navLinks">Reports</a>
+			</div>
+			<div class="navigation-item">
+				<a th:href="@{/showShipping}" class="navLinks">Shipment</a>
+			</div>
+			<div class="navigation-item navRight">
+				<a th:href="@{/showStores}" class="navLinks">Stores</a>
+			</div>
+			<div class="navigation-item dividorL">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item userIcon">
+				<a th:href="@{/showUsers}" class=""> <i class="fa fa-user fa-2x"
+					aria-hidden="true" title="User Page" style="color: white;"> </i>
+				</a>
+
+			</div>
+			<div class="navigation-item dividor">
+				<span style="color: white;">|</span>
+			</div>
+			<div class="navigation-item logoutIcon">
+				<a th:href="@{/logout}" class=""> <i
+					class="fa fa-sign-out fa-2x" aria-hidden="true" title="Log Out"
+					style="color: white;"></i>
+				</a>
+			</div>
+		</div>
+
+	</header>
+
+	<div class="main">
+
+		<div class="content">
+			<div class="containerDiv">
+				<a th:href="@{/showReports}" class="styledLink"><i
+					class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp;Reports List</a>
+			</div>
+			<div class="report-info">
+				<h2>
+					Report # <span th:text="${reportToDisplay.id}"></span>
+				</h2>
+				<h2>
+					Date: <span th:text="${reportToDisplay.date}"></span>
+				</h2>
+			</div>
+			<div class="display-list">
+				<div th:if="${reportToDisplay.repCategory == 'ORDER'}">
+					<div class="list-title report-info">
+						<h2>
+							Order Details for Order # <span th:text="${orderOfReport.id}"></span>
+						</h2>
+						
+					</div>
+					<div class="table-container">
+						<table class="styled-table">
+							<thead>
+								<tr>
+									<th>Product ID</th>
+									<th>Product Name</th>
+									<th>Quantity</th>
+									<th>Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="oDetail : ${orderOfReport.ordDetails}">
+									<td th:text="${oDetail.product.id}"></td>
+									<td th:text="${oDetail.product.name}"></td>
+									<td th:text="${oDetail.quantity}"></td>
+									<td
+										th:text="${totalList.get(orderOfReport.ordDetails.indexOf(oDetail))}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="order-sumary">
+						<div class="item">
+							<label>SubTotal:</label> <span th:text="${orderSubTotal}"></span>
+						</div>
+						<div class="item">
+							<label>Taxes:</label> <span th:text="${orderTaxes}"></span>
+						</div>
+						<div class="item">
+							<label>Total:</label> <span th:text="${orderTotal}"></span>
+						</div>
+					</div>
+					<div class="" style="width: 15em;">
+						<a th:href="@{/toOrderDetails/{oId}(oId=${orderOfReport.id})}"
+							class="button-31 addElement">Go to Order Details</a>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="display-list">
+				<div th:if="${reportToDisplay.repCategory == 'INVENTORY'}">
+					<div class="list-title report-info">
+						<h2>
+							<span th:text="${reportToDisplay.title}"></span>
+						</h2>
+					</div>
+					<div class="row">
+						<h4>Inventory Products: </h4>
+						<div class="attributeField" style="white-space: pre-line"
+							th:text="${reportToDisplay.description}"></div>
+						<!-- 
+						<div class="attributeField" th:each="invRepo : ${reportToView.inventories}">
+							<p th:text="${invRepo}"></p>
+						</div>
+						 -->
+					</div>
+					<div class="row">
+						<h4>Text:</h4>
+						<div class="attributeField" style="white-space: pre-line"
+							th:text="${reportToDisplay.text}"></div>
+					</div>
+					<div class="row">
+						<h4>Additional Info</h4>
+						<div class="attributeField" style="white-space: pre-line"
+							th:text="${reportToDisplay.additionalInfo}"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
